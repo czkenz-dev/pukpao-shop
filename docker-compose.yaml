@@ -1,0 +1,35 @@
+version: '3'
+services:
+  app:
+    container_name: pukpao-shop
+    restart: always
+    build:
+      context: .
+    volumes:
+      - ./app:/app
+      - ~/.m2:/root/.m2
+    expose:
+      - 8080
+    command: mvn clean spring-boot:run
+    depends_on:
+      - db
+  nginx:
+    container_name: reverse-proxy
+    image: nginx:1.17
+    restart: always
+    ports:
+      - 80:80
+      - 443:443
+    volumes:
+      - ./nginx/conf.d:/etc/nginx/conf.d
+    depends_on:
+      - app
+  db:
+    image: mysql/mysql-server:5.7
+    environment:
+      MYSQL_DATABASE: pukpao_shop
+      MYSQL_ROOT_PASSWORD: chiangmai74
+      MYSQL_ROOT_HOST: '%'
+    ports:
+      - "3306:3306"
+    restart: always
