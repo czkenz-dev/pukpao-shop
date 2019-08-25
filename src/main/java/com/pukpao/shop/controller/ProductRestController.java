@@ -25,7 +25,7 @@ public class ProductRestController {
     }
 
     @PostMapping
-    public Product saveProduct(@RequestBody Product product) {
+    public Product saveProduct(@RequestBody Product product) throws Exception {
         return productService.insertProduct(product);
     }
 
