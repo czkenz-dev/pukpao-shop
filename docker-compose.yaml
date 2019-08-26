@@ -5,14 +5,11 @@ services:
     restart: always
     build:
       context: .
-    volumes:
-      - ./app:/app
-      - ~/.m2:/root/.m2
+      dockerfile: Dockerfile
     expose:
       - 8080
-    command: mvn clean spring-boot:run
     depends_on:
-      - db
+      - pukpao-mysql
   nginx:
     container_name: reverse-proxy
     image: nginx:1.17
@@ -24,12 +21,13 @@ services:
       - ./nginx/conf.d:/etc/nginx/conf.d
     depends_on:
       - app
-  db:
+  pukpao-mysql:
+    container_name: pukpao-mysql
     image: mysql/mysql-server:5.7
     environment:
       MYSQL_DATABASE: pukpao_shop
-      MYSQL_ROOT_PASSWORD: chiangmai74
+      MYSQL_ROOT_PASSWORD: passwordkz
       MYSQL_ROOT_HOST: '%'
     ports:
-      - "3306:3306"
+      - 3306:3306
     restart: always
